@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="../static/styles.css">
+    </head>
+    <body>
+        <div id="divControl">
+            <div class="control1">
+                <p>Control of Cart 1</p><br/>
+                <iframe id="camera1" class="imageCamera" src="http://192.168.0.100/Client/index.html">
+                </iframe>
+                <br/><br/>
+                <p>Controls</p><br/>
+                <div class="joystick">
+                    <div class="back_joystick control1" ontouchmove="setJoyStick(this, event)">
+                        <div class="circle_joystick"></div>
+                    </div>
+                    <div class="cameraControl">
+                        <input type="button" value="<" class="control1"/>
+                        <input type="button" value=">" class="control1"/>
+                        <p>Camera</p>
+                    </div>
+                </div>
+                <input type="hidden" value="0" name="socketNumber">
+                <input type="button" value="to Control" onclick="setControl(this)">
+            </div>
+
+            <div class="control2">
+                <p>Control of Cart 2</p><br/>
+                <div id="camera2" class="imageCamera"></div>
+                <br/><br/>
+                <p>Controls</p><br/>
+                <div class="joystick">
+                    <div class="back_joystick control2" ontouchmove="setJoyStick(this, event)">
+                        <div class="circle_joystick"></div>
+                    </div>
+                    <div class="cameraControl">
+                        <input type="button" value="<" class="control2"/>
+                        <input type="button" value=">" class="control2"/>
+                        <p>Camera</p>
+                    </div>
+                </div>
+
+                <input type="hidden" value="1" name="socketNumber">
+                <input type="button" value="to Control" onclick="setControl(this)">
+            </div>
+        </div>
+
+        <script src="../static/js/jquery-3.js"></script>
+        <script src="../static/js/actions.js"></script>
+    </body>
+</html>
