@@ -2,7 +2,7 @@ import cls_ClientTCP
 import cls_ClientSerial
 from time import sleep
 
-cls_TCP = cls_ClientTCP.cls_ClientTCP("192.168.0.124", 600)
+cls_TCP = cls_ClientTCP.cls_ClientTCP("127.0.0.1", 700)
 cls_Serial = cls_ClientSerial.cls_ClientSerial()
 
 cls_TCP.start()

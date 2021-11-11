@@ -16,25 +16,20 @@ class cls_ClientTCP (threading.Thread) :
         print("Connected to Server")
         s.settimeout(20)
 
+        s.send(bytes("%","utf-8"))
+
         while True:
 
             msg = s.recv(10)
             msg = msg.decode("utf-8")
+            print("Message recu: ", msg)
             
             if (msg == "%") :
                 if (len(self.lMessageToServer) > 0) :
-                    s.send(bytes("#","utf-8"))
-                else :
-                    s.send(bytes("%","utf-8"))
-            elif (msg == "#") :
-                s.send(bytes("$","utf-8"))
-            elif (msg == "$") :
-                while (len(self.lMessageToServer) > 0) :
                     auxMessage = self.lMessageToServer.pop(0)
                     s.send(bytes(auxMessage,"utf-8"))
-                    msg = s.recv(10)
-                
-                s.send(bytes("%","utf-8"))
+                else :
+                    s.send(bytes("%","utf-8"))
 
             else :
                 if (msg[0] == 'C') :

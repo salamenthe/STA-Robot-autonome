@@ -3,7 +3,7 @@
     position: relative;
 }
 
-p{
+p, label, input{
     font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif
 }
 
@@ -19,14 +19,6 @@ p{
     background-color: rgb(245, 245, 245);
     transition: .3s;
     margin: 0 30px;
-}
-
-#divControl > div > p:nth-child(1) {
-    font-size: 30px;
-}
-
-#divControl > div > p:nth-child(6) {
-    font-size: 20px;
 }
 
 #divControl .imageCamera {
@@ -93,4 +85,12 @@ p{
 #divControl input:active {
     background-color: rgb(206, 218, 248);
     transition: .3s;
+}
+
+.title {
+    font-size: 25px;
+}
+
+.gpSetConnexion *{
+    padding: 3px 7px;
 }

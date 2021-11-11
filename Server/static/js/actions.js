@@ -1,12 +1,42 @@
 var nRobotInControl = null;
+var lIpConnections = [];
 
 var signalMotor1 = 0, signalMotor2 = 0, signalMotor3 = 0;
 
+function setConnexion(e) {
+    var ipToConnect = $(e).prev().val();
+    var nameClassConnect = $(e).parent().parent().attr("class");
+
+    $("." + nameClassConnect + " input[name='socketIp']").val(ipToConnect)
+}
+
+window.setInterval(function(){
+
+    $.ajax({
+        type: "POST",
+        url: "/getConnexions",
+        contentType: "application/json",
+        dataType: 'json' ,
+    }).done( function(data) {
+        var lIpConnected = data["ipConnected"];
+
+        $("input[name='socketIp']").each(function(index) {
+
+            if ($.inArray($(this).val(), lIpConnected) > -1) {
+                $(this).parent().css("background-color", "rgb(157, 255, 148)");
+                $(this).next().show();
+            }
+            else {
+                $(this).parent().css("background-color", "rgb(245, 245, 245)");
+                $(this).next().hide();
+            }
+        });
+
+    });
+
+}, 300);
+
 function setControl(e) {
-    
-    if (nRobotInControl != null) {
-        setStyleControl(2);
-    }
 
     var buttonSelected = $(e);
     var valButton = buttonSelected.val();
@@ -14,43 +44,12 @@ function setControl(e) {
 
     if (valButton == "to Control") {
         buttonSelected.val("Controling...");
-        setStyleControl();
     }
     else {
         buttonSelected.val("to Control");
-        setStyleControl(2);
         nRobotInControl = null;
     }
 
-    /*
-    var server_data = [
-        {"QTc": "batata"},
-        {"prolonged": "nois"},
-        {"HR": "eu"},
-        {"QT": "sim"},
-        {"Sex": "sou"}
-      ];
-
-    $.ajax({
-        type: "POST",
-        url: "/process_qtc",
-        data: JSON.stringify(server_data),
-        contentType: "application/json",
-        dataType: 'json' ,
-    }).done(function(data) {
-        console.log(data);
-    });
-    */
-
-}
-
-function setStyleControl(type = 1) {
-    if (type == 1) {
-        nRobotInControl.css("background-color", "rgb(191, 201, 228)");
-    }
-    else {
-        nRobotInControl.css("background-color", "rgb(245, 245, 245)");
-    }
 }
 
 
@@ -134,24 +133,24 @@ window.setInterval(function(){
 
         if (keyLeft)  {
             posArrow = -100;
-            $("." + nRobotInControl.attr("class") + " input:nth-child(1)").css("background-color", "rgb(166, 191, 255)");
-            $("." + nRobotInControl.attr("class") + " input:nth-child(2)").css("background-color", "white");
+            $("." + nRobotInControl.attr("class") + " .joystick input:nth-child(1)").css("background-color", "rgb(166, 191, 255)");
+            $("." + nRobotInControl.attr("class") + " .joystick input:nth-child(2)").css("background-color", "white");
         }
         else if (keyRight) {
             posArrow = 100;
-            $("." + nRobotInControl.attr("class") + " input:nth-child(2)").css("background-color", "rgb(166, 191, 255)");
-            $("." + nRobotInControl.attr("class") + " input:nth-child(1)").css("background-color", "white");
+            $("." + nRobotInControl.attr("class") + " .joystick input:nth-child(2)").css("background-color", "rgb(166, 191, 255)");
+            $("." + nRobotInControl.attr("class") + " .joystick input:nth-child(1)").css("background-color", "white");
         }
         else {
-            $("." + nRobotInControl.attr("class") + " input:nth-child(1)").css("background-color", "white");
-            $("." + nRobotInControl.attr("class") + " input:nth-child(2)").css("background-color", "white");
+            $("." + nRobotInControl.attr("class") + " .joystick input:nth-child(1)").css("background-color", "white");
+            $("." + nRobotInControl.attr("class") + " .joystick input:nth-child(2)").css("background-color", "white");
             posArrow = 0;
         }
 
         element.css("left", (posX + 50) + "px");
         element.css("top", (posY + 50) + "px");
 
-        signalMotor1 = -1 * posX * 100.0 / 50;
+        signalMotor1 = -1 * Math.sign(posX) * 70.0;
         signalMotor2 = -1 * posY * 100.0 / 50;
         signalMotor3 = -1 * posArrow;
     }
@@ -171,42 +170,44 @@ window.setInterval(function(){
         voiceAjax = 1;
 
     if (nRobotInControl != null) {
+        valSetMotor = "";
         if (voiceAjax == 1) {
-            $.ajax({
-                type: "POST",
-                url: "/motor",
-                data: JSON.stringify( {"val" : "Cm1_" + Math.round(signalMotor1 * 10) / 10 + "@",
-                                "indexSocket" :  $("." + nRobotInControl.attr("class") + " input[name='socketNumber']").val()} ),
-                contentType: "application/json",
-                dataType: 'json' ,
-            });
+            valSetMotor = "Cm1_" + Math.round(signalMotor1 * 10) / 10 + "@";
         }
         else if (voiceAjax == 2) {
-            $.ajax({
-                type: "POST",
-                url: "/motor",
-                data: JSON.stringify( {"val" : "Cm2_" + Math.round(signalMotor2 * 10) / 10 + "@",
-                                "indexSocket" :  $("." + nRobotInControl.attr("class") + " input[name='socketNumber']").val()} ),
-                contentType: "application/json",
-                dataType: 'json' ,
-            });
+            valSetMotor = "Cm2_" + Math.round(signalMotor2 * 10) / 10 + "@";
         }
         else if (voiceAjax == 3) {
+            valSetMotor = "Cm3_" + Math.round(signalMotor3 * 10) / 10 + "@";
+        }
+
+        if (valSetMotor != "") {
+            
             $.ajax({
                 type: "POST",
-                url: "/motor",
-                data: JSON.stringify( {"val" : "Cm3_" + Math.round(signalMotor3 * 10) / 10 + "@",
-                                "indexSocket" :  $("." + nRobotInControl.attr("class") + " input[name='socketNumber']").val()} ),
+                url: "/setMotor",
+                data: JSON.stringify( {"val" : valSetMotor,
+                                "socketIp" :  $("." + nRobotInControl.attr("class") + " input[name='socketIp']").val()} ),
                 contentType: "application/json",
                 dataType: 'json' ,
             });
         }
     }
-}, 45);
+}, 70);
 
 window.setInterval(function(){
-    var iframe = document.getElementById('camera1');
-    iframe.src = iframe.src;
-}, 500);
+
+    $("input[name='socketIp']").each(function(index) {
+
+        try {
+            $.getJSON("http://" + $(this).val() + "/Client", function(data) {
+                $("#imgCameraCart1").attr('src', 'data:image/png;charset=utf8;base64,' + data.image);
+            });
+        } catch {
+            
+        }
+        
+    });
+}, 70);
 
 
