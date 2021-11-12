@@ -7,8 +7,8 @@ Created on Thu Nov 4 19:36:45 2021
 from Detection import Scan
 import matplotlib.pyplot as plt
 
-length = 2 #longueur suivant l'axe y
-width = 2  #longueur suivant l'axe x
+length = 4 #longueur suivant l'axe y
+width = 4  #longueur suivant l'axe x
 side = 0.5 #côté d'une case de la carte
 
 """Lidar = [[90.,1],
@@ -27,7 +27,11 @@ Lidar = [[359.0,0.741],[358.0 , 0.677],[357.0 , 0.677],[356.0 , 0.67],[355.0 , 0
 
 Map = [[0 for i in range(int(length/side))]for j in range (int(width/side))]
 
-position = (0.75,0.75,90.)
+position = (0.75,0.75,0.)
+
+Scan(Lidar,Map,position,side)
+
+position = (0.75,2.75,0.+90)
 
 Scan(Lidar,Map,position,side)
 

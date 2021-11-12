@@ -27,11 +27,6 @@ def Scan (Lidar : List[List[float]],Map : List[List[int]], Position : Tuple[floa
     Side : A float that control the size of the tiles in meters, by default it is 0.5 meters. This parameter has to be changed according to the "Map" resolution """
     
     
-    if (isDiag(Position[2])):
-        raise ValueError ("The Robot must be oriented to 0°, 90°, 180° or 270° or the mapping will not work")
-        return 0
-    
-    
     (indexX,indexY,offset) = findIndexWithPosition(Position,side) 
         #offset is a tuple representing the offset between the center of the tile and the actual position of the Robot
     if (indexX<0): return 0 
